@@ -123,7 +123,8 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Apply migrations and seed data
+/*
+ // Apply migrations and seed data
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -137,6 +138,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while migrating the database.");
     }
 }
+ */
 
 app.UseHttpsRedirection();
 
