@@ -12,7 +12,7 @@ using QuickDelivery_DAWM.Data;
 namespace QuickDelivery_DAWM.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250602132524_InitialCreate")]
+    [Migration("20250602133526_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

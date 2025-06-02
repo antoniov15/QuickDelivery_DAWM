@@ -71,7 +71,7 @@ namespace QuickDelivery_DAWM.Data
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
-            // Partner configurations - FIX pentru relația cu Address
+            // Partner configurations
             modelBuilder.Entity<Partner>(entity =>
             {
                 entity.HasOne(p => p.User)
@@ -79,7 +79,6 @@ namespace QuickDelivery_DAWM.Data
                     .HasForeignKey<Partner>(p => p.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
-                // Relația cu Address - fără redundanță
                 entity.HasOne(p => p.Address)
                     .WithMany()
                     .HasForeignKey(p => p.AddressId)
@@ -109,16 +108,13 @@ namespace QuickDelivery_DAWM.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Address configurations - FIX pentru a evita conflictul cu Partner
+            // Address configurations
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.HasOne(a => a.User)
                     .WithMany(u => u.Addresses)
                     .HasForeignKey(a => a.UserId)
                     .OnDelete(DeleteBehavior.SetNull);
-
-                // Eliminăm configurația redundantă pentru Partner
-                // Relația va fi configurată doar în Partner entity
             });
 
             // Payment configurations
@@ -130,14 +126,17 @@ namespace QuickDelivery_DAWM.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Seed data cu valori statice
+            // Seed data
             SeedData(modelBuilder);
         }
 
         private static void SeedData(ModelBuilder modelBuilder)
         {
-            // Data statică pentru a evita eroarea de model dinamic
+            // Date statice pentru a evita eroarea de model dinamic
             var staticDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            // Hash static pre-generat pentru parola "admin123"
+            var staticPasswordHash = "$2a$11$bfPciUVybJ3vtJOW.5JvQu6sYqgf1wu76PbwsIlYByyzVTZ6KsJkO";
 
             // Seed default admin user
             modelBuilder.Entity<User>().HasData(
@@ -148,7 +147,7 @@ namespace QuickDelivery_DAWM.Data
                     LastName = "QuickDelivery",
                     Email = "admin@quickdelivery.com",
                     PhoneNumber = "+40123456789",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                    PasswordHash = staticPasswordHash, // Hash static în loc de BCrypt.HashPassword
                     Role = Models.Enums.UserRole.Admin,
                     IsActive = true,
                     IsEmailVerified = true,

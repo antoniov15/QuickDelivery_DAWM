@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
+    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\uploads\products\" />
     <Folder Include="wwwroot\uploads\profiles\" />
   </ItemGroup>
