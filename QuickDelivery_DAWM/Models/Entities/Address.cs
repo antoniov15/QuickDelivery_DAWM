@@ -11,8 +11,6 @@ namespace QuickDelivery_DAWM.Models.Entities
 
         public int? UserId { get; set; }
 
-        public int? PartnerId { get; set; }
-
         [Required]
         [StringLength(255)]
         public string Street { get; set; } = string.Empty;
@@ -42,12 +40,9 @@ namespace QuickDelivery_DAWM.Models.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Foreign Key relationships
+        // Foreign Key relationships - simplified
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
-
-        [ForeignKey("PartnerId")]
-        public virtual Partner? Partner { get; set; }
 
         // Computed property
         [NotMapped]

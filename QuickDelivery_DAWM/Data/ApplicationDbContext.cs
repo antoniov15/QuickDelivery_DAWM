@@ -71,7 +71,7 @@ namespace QuickDelivery_DAWM.Data
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
-            // Partner configurations
+            // Partner configurations - FIX pentru relația cu Address
             modelBuilder.Entity<Partner>(entity =>
             {
                 entity.HasOne(p => p.User)
@@ -79,6 +79,7 @@ namespace QuickDelivery_DAWM.Data
                     .HasForeignKey<Partner>(p => p.UserId)
                     .OnDelete(DeleteBehavior.Cascade);
 
+                // Relația cu Address - fără redundanță
                 entity.HasOne(p => p.Address)
                     .WithMany()
                     .HasForeignKey(p => p.AddressId)
@@ -108,18 +109,16 @@ namespace QuickDelivery_DAWM.Data
                     .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // Address configurations
+            // Address configurations - FIX pentru a evita conflictul cu Partner
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.HasOne(a => a.User)
                     .WithMany(u => u.Addresses)
                     .HasForeignKey(a => a.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.SetNull);
 
-                entity.HasOne(a => a.Partner)
-                    .WithMany()
-                    .HasForeignKey(a => a.PartnerId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                // Eliminăm configurația redundantă pentru Partner
+                // Relația va fi configurată doar în Partner entity
             });
 
             // Payment configurations
@@ -131,12 +130,15 @@ namespace QuickDelivery_DAWM.Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            // Seed data
+            // Seed data cu valori statice
             SeedData(modelBuilder);
         }
 
         private static void SeedData(ModelBuilder modelBuilder)
         {
+            // Data statică pentru a evita eroarea de model dinamic
+            var staticDate = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
             // Seed default admin user
             modelBuilder.Entity<User>().HasData(
                 new User
@@ -150,7 +152,7 @@ namespace QuickDelivery_DAWM.Data
                     Role = Models.Enums.UserRole.Admin,
                     IsActive = true,
                     IsEmailVerified = true,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = staticDate
                 }
             );
 
@@ -165,7 +167,7 @@ namespace QuickDelivery_DAWM.Data
                     PostalCode = "100001",
                     Country = "Romania",
                     IsDefault = true,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = staticDate
                 }
             );
         }
